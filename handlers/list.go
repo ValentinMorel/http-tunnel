@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	Tunnels = map[int]chan Tunnel{}
+	Tunnels = map[int]Tunnel{}
 )
 
 type Tunnel struct {

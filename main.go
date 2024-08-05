@@ -22,18 +22,15 @@ func main() {
 
 	ssh.Handle(func(s ssh.Session) {
 		id := rand.Intn(math.MaxInt)
-		handlers.Tunnels[id] = make(chan handlers.Tunnel)
+		handlers.Tunnels[id] = handlers.Tunnel{}
 
 		s.Write([]byte(fmt.Sprintf("tunnel ID -> %d\n", id))) // Send the tunnel ID to the SSH client
 		fmt.Println("tunnel ID -> ", id)
-		tunnel := <-handlers.Tunnels[id]
-		fmt.Println("tunnel is ready")
 
-		_, err := io.Copy(tunnel.W, s)
+		_, err := io.Copy(handlers.Tunnels[id].W, s)
 		if err != nil {
 			log.Fatal(err)
 		}
-		close(tunnel.Done)
 		s.Write([]byte("tunnel successfully established and closed\n"))
 	})
 
